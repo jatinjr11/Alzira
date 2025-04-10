@@ -1,17 +1,23 @@
 const express = require('express');
 const app = express();
-
 const cookieParser = require('cookie-parser');
 const path = require('path');
+const ownersRouter = require("./routes/ownersRouter");
+const productsRouter = require("./routes/productRouter");
+const usersRouter = require("./routes/usersRouter");
 
-app.use(express.json());  // Parse JSON data
-app.use(express.urlencoded({ extended: true }));  // Parse URL-encoded data
-app.use(cookieParser());  // Parse cookies
-app.use(express.static(path.join(__dirname, 'public'))); // Serve static files from the public directory
-app.use("view engine", "ejs"); // Set EJS as the view engine 
+const db = require("./config/mongoose-connection");
+const { request } = require('https');
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+app.set('view engine', 'ejs');
 
-app.get('/', (req, res) => {});
+app.use("/owners", ownersRouter);
+app.use("/users", usersRouter);
+app.use("/products", productsRouter);
 
-app.listen(3000, () => {
-    console.log('Server is running on port 3000');
-});
+app.listen(3000, ()=>{
+    console.log("Server is running on port 3000");
+})
